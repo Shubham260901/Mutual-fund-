@@ -37,7 +37,7 @@ function renderBlock(b: Block, i: number) {
 export default function Article() {
   const { slug = '' } = useParams();
   const article = getArticle(slug);
-  usePageMeta(article?.title ?? 'Article', article?.excerpt ?? '', `/education/${slug}`);
+  usePageMeta(article?.seoTitle || article?.title || 'Article', article?.seoDescription || article?.excerpt || '', `/education/${slug}`);
 
   if (!article) return <Navigate to="/education#articles" replace />;
   const related = articles.filter((a) => a.slug !== article.slug).slice(0, 3);
