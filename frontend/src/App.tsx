@@ -13,6 +13,8 @@ const Article = lazy(() => import('@/pages/Article'));
 const Contact = lazy(() => import('@/pages/Contact'));
 const Disclosures = lazy(() => import('@/pages/Disclosures'));
 const NotFound = lazy(() => import('@/pages/NotFound'));
+// Admin panel: its own bundle, no site navbar/footer.
+const AdminApp = lazy(() => import('@/admin/AdminApp'));
 
 function PageFallback() {
   return <div className="min-h-[70vh] bg-navy-900" aria-busy="true" />;
@@ -21,6 +23,7 @@ function PageFallback() {
 const page = (el: React.ReactNode) => <Suspense fallback={<PageFallback />}>{el}</Suspense>;
 
 const router = createBrowserRouter([
+  { path: '/admin', element: page(<AdminApp />) },
   {
     element: <Layout />,
     children: [

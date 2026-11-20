@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /admin
 # Replace with your live domain before deploying.
 Sitemap: https://www.example.com/sitemap.xml

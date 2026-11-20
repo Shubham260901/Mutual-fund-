@@ -44,7 +44,7 @@ export const site = {
     phone: '+91 [XXXXX XXXXX]',
     /** Digits only, with country code, used for tel: and WhatsApp links. */
     phoneE164: '910000000000',
-    whatsapp: '910000000000',
+    whatsapp: '919300658007',
     email: 'hello@example.com',
     grievanceEmail: 'grievance@example.com',
     grievanceOfficer: '[Grievance Officer Name]',
@@ -66,7 +66,7 @@ export const site = {
    * validates and then opens the visitor's email app with a pre-filled draft.
    */
   forms: {
-    endpoint: '',
+    endpoint: '/api/enquiry',
     /** Optional scheduling link (Calendly, Cal.com, Zoho Bookings). Shown on the Book a Consultation tab. */
     bookingUrl: '',
   },

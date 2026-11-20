@@ -17,6 +17,9 @@ export interface Article {
   category: 'Basics' | 'Strategy' | 'Risk' | 'Planning';
   readMinutes: number;
   body: Block[];
+  /** Optional search-result overrides, set in the admin panel. */
+  seoTitle?: string;
+  seoDescription?: string;
 }
 
 export const articles: Article[] = [
