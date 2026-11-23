@@ -15,8 +15,8 @@ Tokens live in `tailwind.config.ts`; component classes live in `src/index.css`.
 | ---------------- | --------- | --------------------------------------------------------- |
 | `navy-900`       | `#101D35` | Primary dark surface, headings, primary text              |
 | `navy-950`       | `#0A1324` | Footer                                                    |
-| `emerald-600`    | `#087F5B` | Primary actions, links, positive data series              |
-| `emerald-700`    | `#06694B` | Hover state, eyebrow text on light (AA contrast)          |
+| `brand-600`      | `#1650A8` | Primary actions, links (brand blue, matches the logo)     |
+| `brand-700`      | `#124290` | Hover state, eyebrow text on light (AA contrast)          |
 | `ivory`          | `#F8F9F6` | Page background                                           |
 | `mist`           | `#E9EDF0` | Dividers, slider tracks, quiet fills                      |
 | `gold-400`       | `#C7A66A` | Decorative accents only on light backgrounds              |
@@ -24,8 +24,9 @@ Tokens live in `tailwind.config.ts`; component classes live in `src/index.css`.
 | `gold-700`       | `#7D6232` | Gold-toned text on light backgrounds (AA)                 |
 | `ink-muted`      | `#4A5670` | Body copy (7.0:1 on ivory)                                |
 | `ink-subtle`     | `#646E84` | Captions and helper text (≥ 4.5:1 on white)               |
-| `chart-value`    | `#087F5B` | Chart: projected value                                    |
-| `chart-invested` | `#5B7BC0` | Chart: amount invested                                    |
+| `chart-value`    | `#1D5BBF` | Chart: projected value                                    |
+| `chart-invested` | `#C9832F` | Chart: amount invested                                    |
+| `chart-target`   | `#4F6081` | Chart: goal target (dashed line)                          |
 
 The two chart colours were validated for colour-vision-deficiency separation (ΔE ≥ 14 under deutan and protan simulation) and contrast against white. Charts also always show a legend, so identity never depends on colour alone.
 
@@ -57,7 +58,7 @@ The two chart colours were validated for colour-vision-deficiency separation (Δ
 | `SectionHeading`   | eyebrow + title + description (+ optional action); `tone="light"` on navy |
 | `Reveal`           | fade-up once in view; respects reduced-motion                         |
 | `PageHero`         | navy header band for inner pages                                      |
-| `IconBadge`        | tinted rounded square for icons (`emerald`, `navy`, `gold`, `glass`)  |
+| `IconBadge`        | tinted rounded square for icons (`brand`, `navy`, `gold`, `glass`)  |
 | `Accordion`        | accessible (`aria-expanded`, `aria-controls`), animated height        |
 | `SliderInput`      | range + typed input with validation                                   |
 | `GrowthChart`      | SVG area/line chart with crosshair tooltip, keyboard support, table view |
@@ -72,7 +73,7 @@ The two chart colours were validated for colour-vision-deficiency separation (Δ
 
 ## Accessibility
 
-- Skip link, visible focus rings (`emerald-600`), semantic landmarks.
+- Skip link, visible focus rings (`brand-600`), semantic landmarks.
 - All text/background pairs meet WCAG AA.
 - Forms: labelled fields, `aria-invalid`, errors linked with `aria-describedby`, focus moves to the first error.
 - Calculator tabs follow the WAI-ARIA tabs pattern (arrow-key navigation).

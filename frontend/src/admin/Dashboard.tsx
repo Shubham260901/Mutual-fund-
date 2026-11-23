@@ -24,13 +24,13 @@ function StatCard({ label, value, sub, onClick, highlight }: { label: string; va
       type="button"
       onClick={onClick}
       className={cn(
-        'card group flex flex-col p-5 text-left transition-all hover:-translate-y-0.5 hover:border-emerald-600/40 hover:shadow-lift',
-        highlight && 'border-emerald-600/40 bg-emerald-50/50',
+        'card group flex flex-col p-5 text-left transition-all hover:-translate-y-0.5 hover:border-brand-600/40 hover:shadow-lift',
+        highlight && 'border-brand-600/40 bg-brand-50/50',
       )}
     >
       <span className="flex items-center justify-between text-sm font-medium text-ink-muted">
         {label}
-        <ArrowUpRight className="h-4 w-4 text-ink-subtle transition-colors group-hover:text-emerald-700" aria-hidden />
+        <ArrowUpRight className="h-4 w-4 text-ink-subtle transition-colors group-hover:text-brand-700" aria-hidden />
       </span>
       <span className="tabular mt-1 text-3xl font-bold text-navy-900">{value}</span>
       {sub && <span className="mt-1 text-xs text-ink-subtle">{sub}</span>}
@@ -75,8 +75,8 @@ function WeeklyChart({ weeks }: { weeks: Analytics['weeks'] }) {
           return (
             <g key={w.weekStart}>
               <title>{`Week of ${shortDate(w.weekStart)}: ${w.enquiries} enquiries, ${w.consultations} consultations`}</title>
-              <rect x={x} y={H - eh} width={width} height={eh} rx={2} fill="#5B7BC0" />
-              <rect x={x} y={H - eh - ch} width={width} height={ch} rx={2} fill="#087F5B" />
+              <rect x={x} y={H - eh} width={width} height={eh} rx={2} fill="#C9832F" />
+              <rect x={x} y={H - eh - ch} width={width} height={ch} rx={2} fill="#1D5BBF" />
               {(i % 2 === 0 || weeks.length < 8) && (
                 <text x={x + width / 2} y={H + 16} textAnchor="middle" fontSize={10} fill="#646E84">
                   {shortDate(w.weekStart)}
@@ -87,7 +87,7 @@ function WeeklyChart({ weeks }: { weeks: Analytics['weeks'] }) {
         })}
       </svg>
       <details className="mt-3 text-sm">
-        <summary className="cursor-pointer font-medium text-emerald-700">View as table</summary>
+        <summary className="cursor-pointer font-medium text-brand-700">View as table</summary>
         <table className="tabular mt-2 w-full text-left text-sm">
           <thead>
             <tr className="text-xs uppercase text-ink-subtle">
@@ -170,7 +170,7 @@ export function Dashboard({ onOpenEnquiries }: { onOpenEnquiries: (preset?: Part
         <div className="mb-3 flex items-center justify-between">
           <h2 id="waiting-h" className="text-base font-bold">Waiting for a reply</h2>
           {waitingCount > 0 && (
-            <button type="button" className="text-sm font-medium text-emerald-700 hover:underline" onClick={() => onOpenEnquiries({ status: 'new' })}>
+            <button type="button" className="text-sm font-medium text-brand-700 hover:underline" onClick={() => onOpenEnquiries({ status: 'new' })}>
               View all {waitingCount}
             </button>
           )}
@@ -217,7 +217,7 @@ export function Dashboard({ onOpenEnquiries }: { onOpenEnquiries: (preset?: Part
                     <span className="tabular text-ink-muted">{t.count}</span>
                   </div>
                   <div className="mt-1 h-2 rounded-full bg-mist" aria-hidden>
-                    <div className="h-2 rounded-full bg-emerald-600" style={{ width: `${(t.count / topMax) * 100}%` }} />
+                    <div className="h-2 rounded-full bg-gradient-to-r from-brand-600 to-brand-900" style={{ width: `${(t.count / topMax) * 100}%` }} />
                   </div>
                 </li>
               ))}
@@ -228,7 +228,7 @@ export function Dashboard({ onOpenEnquiries }: { onOpenEnquiries: (preset?: Part
         <section className="card p-5 sm:p-6" aria-labelledby="upcoming-h">
           <div className="mb-4 flex items-center justify-between">
             <h2 id="upcoming-h" className="text-base font-bold">Upcoming consultations</h2>
-            <button type="button" className="text-sm font-medium text-emerald-700 hover:underline" onClick={() => onOpenEnquiries({ upcoming: true })}>
+            <button type="button" className="text-sm font-medium text-brand-700 hover:underline" onClick={() => onOpenEnquiries({ upcoming: true })}>
               View all
             </button>
           </div>
@@ -262,7 +262,7 @@ export function Dashboard({ onOpenEnquiries }: { onOpenEnquiries: (preset?: Part
         <p className="mb-4 text-sm text-ink-muted">Sections edited in this panel are live; the rest still use the content built into the site.</p>
         <ul className="flex flex-wrap gap-2">
           {Object.entries(CONTENT_LABELS).map(([key, label]) => (
-            <li key={key} className={`rounded-full px-3 py-1 text-sm font-medium ring-1 ring-inset ${custom[key] ? 'bg-emerald-50 text-emerald-800 ring-emerald-600/20' : 'bg-navy-50 text-ink-muted ring-navy-900/10'}`}>
+            <li key={key} className={`rounded-full px-3 py-1 text-sm font-medium ring-1 ring-inset ${custom[key] ? 'bg-brand-50 text-brand-800 ring-brand-600/20' : 'bg-navy-50 text-ink-muted ring-navy-900/10'}`}>
               {label}: {custom[key] ? 'edited' : 'built-in'}
             </li>
           ))}

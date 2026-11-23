@@ -62,7 +62,7 @@ function PhotoCard({
         )}
         {busy && (
           <span className="absolute inset-0 flex items-center justify-center bg-white/60" role="status" aria-label="Working">
-            <Loader2 className="h-6 w-6 animate-spin text-emerald-700" />
+            <Loader2 className="h-6 w-6 animate-spin text-brand-700" />
           </span>
         )}
       </div>
@@ -208,10 +208,10 @@ export function GalleryPanel() {
         }}
         className={cn(
           'card flex flex-col items-center gap-3 border-2 border-dashed px-6 py-10 text-center transition-colors',
-          dragging ? 'border-emerald-600 bg-emerald-50' : 'border-navy-900/15',
+          dragging ? 'border-brand-600 bg-brand-50' : 'border-navy-900/15',
         )}
       >
-        <UploadCloud className="h-9 w-9 text-emerald-700" aria-hidden />
+        <UploadCloud className="h-9 w-9 text-brand-700" aria-hidden />
         <div>
           <p className="font-semibold text-navy-900">Drag photos here, or choose files</p>
           <p className="mt-1 text-sm text-ink-muted">JPEG, PNG or WebP. Large photos are resized automatically before upload.</p>

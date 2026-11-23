@@ -46,10 +46,10 @@ describe('period and upcoming filters', () => {
 
   beforeAll(async () => {
     dir = mkdtempSync(join(tmpdir(), 'mfd-periods-'));
-    const app = createApp({ db, images: createImageStore(dir), adminPassword: 'pw-for-tests-123', sessionSecret: 's', notify: () => {} });
+    const app = createApp({ db, images: createImageStore(dir), adminEmail: 'admin@example.com', adminPassword: 'pw-for-tests-123', sessionSecret: 's', notify: () => {} });
     await new Promise<void>((r) => (server = app.listen(0, '127.0.0.1', r)));
     base = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
-    const res = await fetch(`${base}/api/admin/login`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ password: 'pw-for-tests-123' }) });
+    const res = await fetch(`${base}/api/admin/login`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ email: 'admin@example.com', password: 'pw-for-tests-123' }) });
     h = { cookie: res.headers.get('set-cookie')!.split(';')[0], 'x-admin-request': '1' };
 
     const post = (b: unknown) => fetch(`${base}/api/enquiry`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(b) });

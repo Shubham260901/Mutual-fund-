@@ -9,7 +9,7 @@ import { confirmDiscard } from './editor';
 import { EnquiriesPanel } from './EnquiriesPanel';
 import { FaqsEditor } from './FaqsEditor';
 import { GalleryPanel } from './GalleryPanel';
-import { Login } from './Login';
+import { hasResetToken, Login } from './Login';
 import { SeoEditor } from './SeoEditor';
 import { ServicesEditor } from './ServicesEditor';
 import { SettingsEditor } from './SettingsEditor';
@@ -82,6 +82,11 @@ export default function AdminApp() {
 
   useEffect(() => {
     onUnauthorized(() => setAuth('out'));
+    // A password reset link always opens the reset form, even in a browser that is still signed in.
+    if (hasResetToken()) {
+      setAuth('out');
+      return () => onUnauthorized(null);
+    }
     adminApi
       .me()
       .then(() => setAuth('in'))
@@ -107,7 +112,7 @@ export default function AdminApp() {
   if (auth === 'loading') {
     return (
       <div className="flex min-h-screen items-center justify-center bg-ivory" role="status" aria-label="Loading">
-        <Loader2 className="h-6 w-6 animate-spin text-emerald-700" />
+        <Loader2 className="h-6 w-6 animate-spin text-brand-700" />
       </div>
     );
   }
@@ -164,7 +169,7 @@ export default function AdminApp() {
                   onClick={() => go(id)}
                   className={cn(
                     'flex shrink-0 items-center gap-2.5 whitespace-nowrap rounded-xl px-3 py-2 text-sm font-semibold transition-colors lg:w-full',
-                    tab === id ? 'bg-emerald-50 text-emerald-800' : 'text-ink-muted hover:bg-navy-900/5',
+                    tab === id ? 'bg-brand-50 text-brand-800' : 'text-ink-muted hover:bg-navy-900/5',
                   )}
                 >
                   <Icon className="h-4 w-4" aria-hidden /> {label}

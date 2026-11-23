@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion';
-import { MessageCircle } from 'lucide-react';
 import { useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { whatsappLink } from '@/config/site';
+import { WhatsAppIcon } from '../ui/WhatsAppIcon';
 import { Footer } from './Footer';
 import { Navbar } from './Navbar';
 
@@ -38,9 +38,10 @@ function WhatsAppFab() {
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ delay: 1.2, duration: 0.4 }}
-      className="group fixed bottom-5 right-5 z-40 flex h-14 items-center gap-2 rounded-full bg-emerald-600 pl-4 pr-4 text-white shadow-lift transition-colors hover:bg-emerald-700 sm:bottom-6 sm:right-6"
+      // WhatsApp's own brand green, kept on purpose even though the site's accent colour is blue.
+      className="group fixed bottom-5 right-5 z-40 flex h-14 items-center gap-2 rounded-full bg-gradient-to-br from-[#25D366] via-[#17A55C] to-[#0E7A5C] pl-4 pr-4 text-white shadow-[0_10px_28px_-8px_rgba(14,122,92,0.7)] transition-[filter] hover:brightness-95 sm:bottom-6 sm:right-6"
     >
-      <MessageCircle className="h-6 w-6" aria-hidden />
+      <WhatsAppIcon className="h-6 w-6" />
       <span className="max-w-0 overflow-hidden whitespace-nowrap text-sm font-semibold transition-all duration-300 group-hover:max-w-[8rem] group-focus-visible:max-w-[8rem]">
         WhatsApp us
       </span>

@@ -59,7 +59,7 @@ export function FaqsEditor() {
             role="tab"
             aria-selected={which === t.id}
             onClick={() => confirmDiscard() && setWhich(t.id)}
-            className={cn('rounded-full border px-4 py-2 text-sm font-semibold transition-colors', which === t.id ? 'border-emerald-600 bg-emerald-50 text-emerald-800' : 'border-navy-900/15 text-ink-muted hover:border-navy-900/30')}
+            className={cn('rounded-full border px-4 py-2 text-sm font-semibold transition-colors', which === t.id ? 'border-brand-600 bg-brand-50 text-brand-800' : 'border-navy-900/15 text-ink-muted hover:border-navy-900/30')}
           >
             {t.label}
           </button>

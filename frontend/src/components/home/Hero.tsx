@@ -9,9 +9,27 @@ const ease = [0.22, 1, 0.36, 1] as const;
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden bg-navy-900 bg-navy-radial pt-32 sm:pt-40 lg:pt-44">
+    <section className="relative overflow-hidden bg-navy-900 bg-navy-radial pt-28 sm:pt-32 lg:pt-36">
       <GridTexture />
-      <div className="container-page relative grid items-center gap-16 pb-20 lg:grid-cols-12 lg:gap-10 lg:pb-28">
+
+      {/* Title directly under the navbar: wide-tracked capitals with a gold rule beneath. */}
+      <div className="container-page relative">
+        <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease }} className="inline-block max-w-full">
+          <p className="font-display text-[clamp(1.75rem,7vw,3.75rem)] font-bold uppercase leading-[1.08] tracking-[0.08em]">
+            <span className="text-white">Mutual Fund</span>{' '}
+            <span className="bg-gradient-to-r from-gold-200 via-gold-300 to-gold-400 bg-clip-text text-transparent">Distributor</span>
+          </p>
+          <motion.span
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ duration: 0.9, delay: 0.25, ease }}
+            className="mt-4 block h-[3px] origin-left rounded-full bg-gradient-to-r from-gold-300 via-gold-400/70 to-transparent sm:mt-5"
+            aria-hidden
+          />
+        </motion.div>
+      </div>
+
+      <div className="container-page relative grid items-center gap-16 pb-20 pt-14 sm:pt-16 lg:grid-cols-12 lg:gap-10 lg:pb-28 lg:pt-20">
         <div className="lg:col-span-6">
           <motion.p
             initial={{ opacity: 0, y: 12 }}
@@ -19,11 +37,12 @@ export function Hero() {
             transition={{ duration: 0.6, ease }}
             className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] py-1.5 pl-1.5 pr-4 text-xs font-medium text-navy-100"
           >
-            <span className="rounded-full bg-emerald-600 px-2.5 py-1 text-[0.6875rem] font-semibold uppercase tracking-wider text-white">
+            <span className="rounded-full bg-brand-600 px-2.5 py-1 text-[0.6875rem] font-semibold uppercase tracking-wider text-white">
               AMFI-registered
             </span>
-            <span className="hidden sm:inline">Mutual Fund Distributor ·</span>
-            <span className="sm:hidden">MFD ·</span>
+            <span className="hidden rounded-full bg-gold-400/20 px-3 py-1 text-[0.8125rem] font-extrabold tracking-wide text-gold-200 ring-1 ring-inset ring-gold-400/40 sm:inline">
+              Mutual Fund Distributor
+            </span>
             <Value>{site.credentials.arn}</Value>
           </motion.p>
 
@@ -68,7 +87,7 @@ export function Hero() {
           >
             {['Investments held in your name', 'Commission fully disclosed', 'No guaranteed-return promises'].map((t) => (
               <li key={t} className="flex items-center gap-2">
-                <Check className="h-4 w-4 text-emerald-400" aria-hidden />
+                <Check className="h-4 w-4 text-brand-400" aria-hidden />
                 {t}
               </li>
             ))}
@@ -100,7 +119,7 @@ function HeroVisual() {
       aria-label="Illustration of a goal-based investment plan"
       role="img"
     >
-      <div className="absolute -inset-8 rounded-[3rem] bg-emerald-600/10 blur-3xl" aria-hidden />
+      <div className="absolute -inset-8 rounded-[3rem] bg-brand-600/10 blur-3xl" aria-hidden />
 
       <div className="relative rounded-4xl border border-white/10 bg-white/[0.06] p-2 shadow-2xl backdrop-blur-xl">
         <div className="rounded-[1.6rem] bg-white p-6 sm:p-7">
@@ -128,7 +147,7 @@ function HeroVisual() {
                     </div>
                     <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-mist">
                       <motion.div
-                        className="h-full rounded-full bg-emerald-600"
+                        className="h-full rounded-full bg-brand-600"
                         initial={{ width: 0 }}
                         animate={{ width: `${g.pct}%` }}
                         transition={{ duration: 1.2, delay: 0.6 + i * 0.15, ease }}
@@ -144,28 +163,28 @@ function HeroVisual() {
             <svg viewBox="0 0 300 80" className="h-20 w-full" aria-hidden>
               <defs>
                 <linearGradient id="heroArea" x1="0" x2="0" y1="0" y2="1">
-                  <stop offset="0%" stopColor="#087F5B" stopOpacity="0.18" />
-                  <stop offset="100%" stopColor="#087F5B" stopOpacity="0" />
+                  <stop offset="0%" stopColor="#1D5BBF" stopOpacity="0.18" />
+                  <stop offset="100%" stopColor="#1D5BBF" stopOpacity="0" />
                 </linearGradient>
               </defs>
               <path d="M0 72 C 60 70, 90 62, 140 52 S 230 26, 300 8 L300 80 L0 80 Z" fill="url(#heroArea)" />
               <motion.path
                 d="M0 72 C 60 70, 90 62, 140 52 S 230 26, 300 8"
                 fill="none"
-                stroke="#087F5B"
+                stroke="#1D5BBF"
                 strokeWidth="2"
                 strokeLinecap="round"
                 initial={{ pathLength: 0 }}
                 animate={{ pathLength: 1 }}
                 transition={{ duration: 1.6, delay: 0.7, ease }}
               />
-              <path d="M0 72 L300 46" fill="none" stroke="#5B7BC0" strokeWidth="2" strokeLinecap="round" />
+              <path d="M0 72 L300 46" fill="none" stroke="#C9832F" strokeWidth="2" strokeLinecap="round" />
             </svg>
             <p className="mt-2 text-[0.6875rem] text-ink-subtle">The power of compounding over time · conceptual illustration</p>
           </div>
 
           <div className="mt-5 flex items-center gap-3 border-t border-navy-900/[0.07] pt-5">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700" aria-hidden>
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-700" aria-hidden>
               <CalendarCheck className="h-5 w-5" strokeWidth={1.75} />
             </span>
             <div>

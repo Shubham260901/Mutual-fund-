@@ -169,12 +169,12 @@ export default function About() {
           />
           <div className="mx-auto mt-14 grid max-w-5xl gap-6 md:grid-cols-2">
             <Reveal>
-              <div className="h-full rounded-3xl border border-emerald-600/15 bg-emerald-50/50 p-8">
+              <div className="h-full rounded-3xl border border-brand-600/15 bg-brand-50/50 p-8">
                 <h3 className="text-lg font-bold">We are</h3>
                 <ul className="mt-6 space-y-4">
                   {weAre.map((t) => (
                     <li key={t} className="flex gap-3 text-ink-muted">
-                      <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-white" aria-hidden>
+                      <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-600 text-white" aria-hidden>
                         <Check className="h-3 w-3" strokeWidth={3} />
                       </span>
                       {t}

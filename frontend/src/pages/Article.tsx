@@ -56,7 +56,7 @@ export default function Article() {
             <ArrowLeft className="h-4 w-4" /> All articles
           </Link>
           <div className="mt-8 flex items-center gap-3 text-sm">
-            <span className="rounded-full bg-emerald-600 px-3 py-1 text-xs font-semibold text-white">{article.category}</span>
+            <span className="rounded-full bg-brand-600 px-3 py-1 text-xs font-semibold text-white">{article.category}</span>
             <span className="inline-flex items-center gap-1.5 text-navy-100/70">
               <Clock className="h-3.5 w-3.5" aria-hidden /> {article.readMinutes} min read
             </span>

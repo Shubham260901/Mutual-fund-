@@ -17,10 +17,10 @@ let h: Record<string, string>;
 
 beforeAll(async () => {
   dir = mkdtempSync(join(tmpdir(), 'mfd-content-'));
-  const app = createApp({ db: openDb(':memory:'), images: createImageStore(dir), adminPassword: PASSWORD, sessionSecret: 's', notify: () => {} });
+  const app = createApp({ db: openDb(':memory:'), images: createImageStore(dir), adminEmail: 'admin@example.com', adminPassword: PASSWORD, sessionSecret: 's', notify: () => {} });
   await new Promise<void>((r) => (server = app.listen(0, '127.0.0.1', r)));
   base = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
-  const res = await fetch(`${base}/api/admin/login`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ password: PASSWORD }) });
+  const res = await fetch(`${base}/api/admin/login`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ email: 'admin@example.com', password: PASSWORD }) });
   h = { cookie: res.headers.get('set-cookie')!.split(';')[0], 'x-admin-request': '1' };
 });
 afterAll(async () => {

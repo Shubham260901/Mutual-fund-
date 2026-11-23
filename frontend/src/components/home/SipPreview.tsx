@@ -47,19 +47,19 @@ export function SipPreview() {
                 <p className="mt-1 text-sm text-navy-100/60 tabular">{formatINR(p.value)}</p>
 
                 <div className="mt-8 flex h-2.5 gap-0.5 overflow-hidden rounded-full" aria-hidden>
-                  <div className="rounded-l-full bg-[#8FA6D6] transition-[width] duration-500" style={{ width: `${investedPct}%` }} />
-                  <div className="flex-1 rounded-r-full bg-emerald-400" />
+                  <div className="rounded-l-full bg-[#C9832F] transition-[width] duration-500" style={{ width: `${investedPct}%` }} />
+                  <div className="flex-1 rounded-r-full bg-brand-400" />
                 </div>
                 <dl className="mt-5 space-y-3 text-sm">
                   <div className="flex items-center justify-between gap-4">
                     <dt className="flex items-center gap-2 text-navy-100/75">
-                      <span className="h-2 w-2 rounded-full bg-[#8FA6D6]" aria-hidden /> Invested
+                      <span className="h-2 w-2 rounded-full bg-[#C9832F]" aria-hidden /> Invested
                     </dt>
                     <dd className="font-semibold tabular">{formatINR(p.invested)}</dd>
                   </div>
                   <div className="flex items-center justify-between gap-4">
                     <dt className="flex items-center gap-2 text-navy-100/75">
-                      <span className="h-2 w-2 rounded-full bg-emerald-400" aria-hidden /> Estimated gains
+                      <span className="h-2 w-2 rounded-full bg-brand-400" aria-hidden /> Estimated gains
                     </dt>
                     <dd className="font-semibold tabular">{formatINR(p.gains)}</dd>
                   </div>

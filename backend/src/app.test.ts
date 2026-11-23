@@ -10,6 +10,7 @@ import { openDb } from './db.ts';
 import { createImageStore, detectImageExt } from './images.ts';
 import { parseEnquiry } from './validation.ts';
 
+const EMAIL = 'admin@example.com';
 const PASSWORD = 'correct horse battery';
 const SECRET = 'test-secret';
 
@@ -40,7 +41,7 @@ let notify: ReturnType<typeof vi.fn>;
 beforeAll(async () => {
   uploadDir = mkdtempSync(join(tmpdir(), 'mfd-uploads-'));
   notify = vi.fn();
-  const app = createApp({ db: openDb(':memory:'), images: createImageStore(uploadDir), adminPassword: PASSWORD, sessionSecret: SECRET, notify });
+  const app = createApp({ db: openDb(':memory:'), images: createImageStore(uploadDir), adminEmail: EMAIL, adminPassword: PASSWORD, sessionSecret: SECRET, notify });
   await new Promise<void>((r) => (server = app.listen(0, '127.0.0.1', r)));
   base = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
 });
@@ -53,7 +54,7 @@ const post = (path: string, body: unknown, headers: Record<string, string> = {})
   fetch(base + path, { method: 'POST', headers: { 'content-type': 'application/json', ...headers }, body: JSON.stringify(body) });
 
 async function login(): Promise<Record<string, string>> {
-  const res = await post('/api/admin/login', { password: PASSWORD });
+  const res = await post('/api/admin/login', { email: EMAIL, password: PASSWORD });
   expect(res.status).toBe(200);
   const cookie = res.headers.get('set-cookie')!.split(';')[0];
   return { cookie, 'x-admin-request': '1' };
@@ -120,7 +121,9 @@ describe('public enquiry endpoint', () => {
 
 describe('admin auth', () => {
   it('rejects wrong password and unauthenticated access', async () => {
-    expect((await post('/api/admin/login', { password: 'nope' })).status).toBe(401);
+    expect((await post('/api/admin/login', { email: EMAIL, password: 'nope' })).status).toBe(401);
+    expect((await post('/api/admin/login', { email: 'someone@else.com', password: PASSWORD })).status).toBe(401);
+    expect((await post('/api/admin/login', { password: PASSWORD })).status).toBe(401);
     expect((await fetch(`${base}/api/admin/enquiries`)).status).toBe(401);
     expect((await fetch(`${base}/api/admin/gallery`)).status).toBe(401);
   });
@@ -129,12 +132,95 @@ describe('admin auth', () => {
     expect((await sendJson('PATCH', '/api/admin/enquiries/1', { cookie }, { status: 'closed' })).status).toBe(403);
   });
   it('sets an HttpOnly SameSite=Strict cookie, and logout clears it', async () => {
-    const res = await post('/api/admin/login', { password: PASSWORD });
+    const res = await post('/api/admin/login', { email: EMAIL, password: PASSWORD });
     const c = res.headers.get('set-cookie')!;
     expect(c).toMatch(/HttpOnly/);
     expect(c).toMatch(/SameSite=Strict/);
     const out = await post('/api/admin/logout', {});
     expect(out.headers.get('set-cookie')).toMatch(/Max-Age=0/);
+  });
+  it('accepts the email in any case and with spaces', async () => {
+    expect((await post('/api/admin/login', { email: '  Admin@Example.COM ', password: PASSWORD })).status).toBe(200);
+  });
+});
+
+describe('forgot / reset password', () => {
+  // Own app and database, so changing the password doesn't affect the other suites.
+  let srv: Server;
+  let url: string;
+  let db: ReturnType<typeof openDb>;
+  const sendResetLink = vi.fn();
+  const startApp = async (adminPassword: string) => {
+    const app = createApp({
+      db,
+      images: createImageStore(uploadDir),
+      adminEmail: EMAIL,
+      adminPassword,
+      sessionSecret: SECRET,
+      publicUrl: 'https://site.test',
+      sendResetLink,
+    });
+    await new Promise<void>((r) => (srv = app.listen(0, '127.0.0.1', r)));
+    url = `http://127.0.0.1:${(srv.address() as AddressInfo).port}`;
+  };
+  const stopApp = () => new Promise((r) => srv.close(r));
+  const p = (path: string, body: unknown) =>
+    fetch(url + path, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
+  const tokenFromLink = () => new URL(String(sendResetLink.mock.lastCall![1])).searchParams.get('reset')!;
+
+  beforeAll(async () => {
+    db = openDb(':memory:');
+    await startApp(PASSWORD);
+  });
+  afterAll(stopApp);
+
+  it('answers the same for unknown emails and sends nothing', async () => {
+    const res = await p('/api/admin/forgot-password', { email: 'stranger@example.com' });
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ ok: true });
+    expect(sendResetLink).not.toHaveBeenCalled();
+  });
+
+  it('emails a one-time link on the configured site address, then resets the password', async () => {
+    const before = await p('/api/admin/login', { email: EMAIL, password: PASSWORD });
+    const oldCookie = before.headers.get('set-cookie')!.split(';')[0];
+
+    expect((await p('/api/admin/forgot-password', { email: 'ADMIN@example.com' })).status).toBe(200);
+    expect(sendResetLink).toHaveBeenCalledOnce();
+    const [to, link] = sendResetLink.mock.lastCall!;
+    expect(to).toBe(EMAIL);
+    expect(link).toMatch(/^https:\/\/site\.test\/admin\?reset=/);
+    const token = tokenFromLink();
+
+    expect((await p('/api/admin/reset-password', { token, password: 'short' })).status).toBe(400);
+    expect((await p('/api/admin/reset-password', { token: 'forged', password: 'a brand new password' })).status).toBe(400);
+    expect((await p('/api/admin/reset-password', { token, password: 'a brand new password' })).status).toBe(200);
+    // Single use.
+    expect((await p('/api/admin/reset-password', { token, password: 'another new password' })).status).toBe(400);
+
+    expect((await p('/api/admin/login', { email: EMAIL, password: PASSWORD })).status).toBe(401);
+    expect((await p('/api/admin/login', { email: EMAIL, password: 'a brand new password' })).status).toBe(200);
+    // Sessions from before the reset are signed out.
+    expect((await fetch(`${url}/api/admin/me`, { headers: { cookie: oldCookie } })).status).toBe(401);
+  });
+
+  it('rejects expired tokens', async () => {
+    await p('/api/admin/forgot-password', { email: EMAIL });
+    const token = tokenFromLink();
+    expect(db.consumeResetToken('x', Date.now())).toBe(false);
+    const nowSpy = vi.spyOn(Date, 'now').mockReturnValue(Date.now() + 31 * 60 * 1000);
+    try {
+      expect((await p('/api/admin/reset-password', { token, password: 'yet another password' })).status).toBe(400);
+    } finally {
+      nowSpy.mockRestore();
+    }
+  });
+
+  it('changing ADMIN_PASSWORD in .env takes over again', async () => {
+    await stopApp();
+    await startApp('a password from env');
+    expect((await p('/api/admin/login', { email: EMAIL, password: 'a brand new password' })).status).toBe(401);
+    expect((await p('/api/admin/login', { email: EMAIL, password: 'a password from env' })).status).toBe(200);
   });
 });
 

@@ -2,26 +2,50 @@ import { Link } from 'react-router-dom';
 import { site } from '@/config/site';
 import { cn } from '@/lib/cn';
 
+/** The round "Deepak Gedam · Mutual Fund Distributor" badge (public/images/logo-badge*.png). */
 export function LogoMark({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 40 40" className={cn('h-9 w-9', className)} aria-hidden>
-      <rect width="40" height="40" rx="11" fill="#101D35" />
-      <rect x="0.5" y="0.5" width="39" height="39" rx="10.5" fill="none" stroke="#C7A66A" strokeOpacity="0.35" />
-      <path d="M10 26.5 17.5 19l5 3.75L30 14" fill="none" stroke="#C7A66A" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
-      <circle cx="30" cy="14" r="2.9" fill="#0E8D66" />
-    </svg>
+    <img
+      src="/images/logo-badge-160.png"
+      srcSet="/images/logo-badge-160.png 160w, /images/logo-badge.png 512w"
+      sizes="(min-width: 1024px) 96px, 80px"
+      width={160}
+      height={160}
+      alt=""
+      aria-hidden
+      decoding="async"
+      className={cn('h-11 w-11 shrink-0 rounded-full', className)}
+    />
   );
 }
 
-export function Logo({ tone = 'dark' }: { tone?: 'dark' | 'light' }) {
+export function Logo({ tone = 'dark', size = 'md' }: { tone?: 'dark' | 'light'; size?: 'md' | 'lg' }) {
+  const lg = size === 'lg';
   return (
-    <Link to="/" className="group flex items-center gap-3" aria-label={`${site.name}, home`}>
-      <LogoMark className="transition-transform duration-300 group-hover:scale-[1.04]" />
+    <Link to="/" className={cn('group flex items-center', lg ? 'w-fit gap-5' : 'gap-3')} aria-label={`${site.name}, home`}>
+      <LogoMark
+        className={cn(
+          'transition-transform duration-300 group-hover:scale-[1.04]',
+          lg && 'h-[6.5rem] w-[6.5rem] shadow-[0_0_0_5px_rgba(255,255,255,0.06)] sm:h-[7.75rem] sm:w-[7.75rem]',
+        )}
+      />
       <span className="flex flex-col leading-none">
-        <span className={cn('font-display text-[1.0625rem] font-bold tracking-tight', tone === 'light' ? 'text-white' : 'text-navy-900')}>
+        <span
+          className={cn(
+            'font-display font-bold tracking-tight',
+            lg ? 'whitespace-nowrap text-[1.625rem] sm:text-[1.8rem]' : 'text-[1.0625rem]',
+            tone === 'light' ? 'text-white' : 'text-navy-900',
+          )}
+        >
           {site.name}
         </span>
-        <span className={cn('mt-1 text-[0.6875rem] font-medium uppercase tracking-[0.14em]', tone === 'light' ? 'text-gold-300' : 'text-gold-700')}>
+        <span
+          className={cn(
+            'font-medium uppercase',
+            lg ? 'mt-2.5 text-[0.8125rem] leading-snug tracking-[0.12em] sm:text-[0.9375rem]' : 'mt-1 text-[0.6875rem] tracking-[0.14em]',
+            tone === 'light' ? 'text-gold-300' : 'text-gold-700',
+          )}
+        >
           {site.tagline}
         </span>
       </span>

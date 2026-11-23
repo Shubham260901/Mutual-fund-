@@ -70,7 +70,7 @@ export function SliderInput({ label, value, onChange, min, max, step = 1, unit, 
         </label>
         <div
           className={cn(
-            'flex h-10 items-center gap-1 rounded-xl border bg-ivory px-3 transition-colors focus-within:border-emerald-600 focus-within:bg-white',
+            'flex h-10 items-center gap-1 rounded-xl border bg-ivory px-3 transition-colors focus-within:border-brand-600 focus-within:bg-white',
             error ? 'border-red-600' : 'border-navy-900/10',
           )}
         >

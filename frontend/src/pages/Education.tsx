@@ -108,7 +108,7 @@ export default function Education() {
               <li key={t.id} className="shrink-0">
                 <a
                   href={`#${t.id}`}
-                  className="block rounded-full border border-navy-900/10 bg-white px-4 py-2 text-sm font-medium text-ink-muted transition-colors hover:border-emerald-600/30 hover:text-navy-900"
+                  className="block rounded-full border border-navy-900/10 bg-white px-4 py-2 text-sm font-medium text-ink-muted transition-colors hover:border-brand-600/30 hover:text-navy-900"
                 >
                   {t.label}
                 </a>

@@ -152,7 +152,7 @@ export function ArticlesEditor() {
                         type="button"
                         aria-current={i === idx}
                         onClick={() => setSelected(i)}
-                        className={cn('w-full rounded-xl border px-3.5 py-2.5 text-left transition-colors', i === idx ? 'border-emerald-600 bg-emerald-50' : 'border-navy-900/10 bg-white hover:border-navy-900/25')}
+                        className={cn('w-full rounded-xl border px-3.5 py-2.5 text-left transition-colors', i === idx ? 'border-brand-600 bg-brand-50' : 'border-navy-900/10 bg-white hover:border-navy-900/25')}
                       >
                         <span className="line-clamp-2 text-sm font-semibold text-navy-900">{a.title || 'Untitled'}</span>
                         <span className="mt-1 flex items-center gap-2 text-xs text-ink-subtle">
@@ -171,7 +171,7 @@ export function ArticlesEditor() {
                     <h2 className="text-lg font-bold">Edit article</h2>
                     <div className="flex items-center gap-2">
                       {current.published && current.slug && (
-                        <a href={`/education/${current.slug}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm font-medium text-emerald-700 hover:underline">
+                        <a href={`/education/${current.slug}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-700 hover:underline">
                           View <ExternalLink className="h-3.5 w-3.5" aria-hidden />
                         </a>
                       )}

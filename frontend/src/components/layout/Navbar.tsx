@@ -7,6 +7,8 @@ import { cn } from '@/lib/cn';
 import { Button } from '../ui/Button';
 import { Logo } from './Logo';
 
+const LIGHT_TOP_PAGES = ['/contact'];
+
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -35,7 +37,8 @@ export function Navbar() {
     };
   }, [open]);
 
-  const solid = scrolled || open;
+  // Pages without a dark hero at the top need the solid (light) bar from the start.
+  const solid = scrolled || open || LIGHT_TOP_PAGES.includes(pathname);
 
   return (
     <header
@@ -78,7 +81,7 @@ export function Navbar() {
                     {isActive && (
                       <motion.span
                         layoutId="nav-active"
-                        className={cn('absolute inset-x-4 -bottom-0.5 h-px', solid ? 'bg-emerald-600' : 'bg-gold-400')}
+                        className={cn('absolute inset-x-4 -bottom-0.5 h-px', solid ? 'bg-brand-600' : 'bg-gold-400')}
                         transition={{ type: 'spring', stiffness: 380, damping: 32 }}
                       />
                     )}
@@ -135,7 +138,7 @@ export function Navbar() {
                       className={({ isActive }) =>
                         cn(
                           'flex items-center justify-between border-b border-navy-900/[0.06] py-4 font-display text-xl font-semibold',
-                          isActive ? 'text-emerald-700' : 'text-navy-900',
+                          isActive ? 'text-brand-700' : 'text-navy-900',
                         )
                       }
                     >

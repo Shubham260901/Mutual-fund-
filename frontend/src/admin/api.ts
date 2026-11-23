@@ -93,6 +93,9 @@ export const onUnauthorized = (fn: (() => void) | null) => {
   unauthorizedHandler = fn;
 };
 
+/** Endpoints used while signed out: a 401 there is a wrong password, not an expired session. */
+const PUBLIC_PATHS = ['/login', '/forgot-password', '/reset-password'];
+
 async function request<T>(method: string, path: string, opts: { json?: unknown; body?: Blob; contentType?: string } = {}): Promise<T> {
   const headers: Record<string, string> = { 'x-admin-request': '1' };
   let body: BodyInit | undefined;
@@ -112,7 +115,7 @@ async function request<T>(method: string, path: string, opts: { json?: unknown; 
   }
   const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string } & T;
   if (!res.ok) {
-    if (res.status === 401 && path !== '/login') unauthorizedHandler?.();
+    if (res.status === 401 && !PUBLIC_PATHS.includes(path)) unauthorizedHandler?.();
     throw new ApiError(data.error || `Request failed (${res.status})`, res.status);
   }
   return data;
@@ -132,7 +135,9 @@ const qs = (f: Partial<EnquiryFilters> & { pageSize?: number }) => {
 };
 
 export const adminApi = {
-  login: (password: string) => request<{ ok: true }>('POST', '/login', { json: { password } }),
+  login: (email: string, password: string) => request<{ ok: true }>('POST', '/login', { json: { email, password } }),
+  forgotPassword: (email: string) => request<{ ok: true }>('POST', '/forgot-password', { json: { email } }),
+  resetPassword: (token: string, password: string) => request<{ ok: true }>('POST', '/reset-password', { json: { token, password } }),
   logout: () => request<{ ok: true }>('POST', '/logout'),
   me: () => request<{ ok: true }>('GET', '/me'),
 

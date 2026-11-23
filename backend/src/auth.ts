@@ -1,4 +1,4 @@
-import { createHash, createHmac, randomBytes, timingSafeEqual } from 'node:crypto';
+import { createHash, createHmac, randomBytes, scryptSync, timingSafeEqual } from 'node:crypto';
 
 export const COOKIE_NAME = 'admin_session';
 export const SESSION_TTL_MS = 8 * 60 * 60 * 1000;
@@ -18,6 +18,36 @@ export function checkPassword(given: unknown, expected: string): boolean {
   const h = (s: string) => createHash('sha256').update(s).digest();
   return timingSafeEqual(h(given), h(expected));
 }
+
+/** Constant-time, case-insensitive email check. */
+export function checkEmail(given: unknown, expected: string): boolean {
+  if (typeof given !== 'string' || !expected) return false;
+  return checkPassword(given.trim().toLowerCase(), expected.trim().toLowerCase());
+}
+
+export const MIN_PASSWORD_LENGTH = 10;
+export const RESET_TOKEN_TTL_MS = 30 * 60 * 1000;
+
+/** Salted scrypt hash, stored as `scrypt$<salt>$<hash>` (both base64url). */
+export function hashPassword(password: string): string {
+  const salt = randomBytes(16);
+  return `scrypt$${salt.toString('base64url')}$${scryptSync(password, salt, 32).toString('base64url')}`;
+}
+
+export function verifyPasswordHash(given: unknown, stored: string): boolean {
+  const [scheme, salt, hash] = stored.split('$');
+  if (typeof given !== 'string' || scheme !== 'scrypt' || !salt || !hash) return false;
+  const expected = Buffer.from(hash, 'base64url');
+  const actual = scryptSync(given, Buffer.from(salt, 'base64url'), expected.length);
+  return timingSafeEqual(actual, expected);
+}
+
+/** One-time reset token: the raw value goes in the emailed link, only its SHA-256 is stored. */
+export function createResetToken(): { token: string; tokenHash: string } {
+  const token = randomBytes(32).toString('base64url');
+  return { token, tokenHash: hashResetToken(token) };
+}
+export const hashResetToken = (token: string) => createHash('sha256').update(token).digest('hex');
 
 /** Stateless signed session token: `<base64url({exp})>.<hmac>`. */
 export function createSession(secret: string, now = Date.now()): string {

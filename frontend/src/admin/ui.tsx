@@ -5,7 +5,7 @@ import type { Status } from './api';
 export const STATUS_STYLE: Record<Status, string> = {
   new: 'bg-sky-50 text-sky-800 ring-sky-600/20',
   contacted: 'bg-amber-50 text-amber-800 ring-amber-600/20',
-  scheduled: 'bg-emerald-50 text-emerald-800 ring-emerald-600/20',
+  scheduled: 'bg-brand-50 text-brand-800 ring-brand-600/20',
   closed: 'bg-navy-50 text-navy-700 ring-navy-900/10',
   spam: 'bg-red-50 text-red-800 ring-red-600/20',
 };
@@ -16,7 +16,10 @@ export function StatusBadge({ status }: { status: Status }) {
 
 export const btn =
   'inline-flex h-10 items-center justify-center gap-2 rounded-full px-4 text-sm font-semibold transition-colors disabled:pointer-events-none disabled:opacity-50';
-export const btnPrimary = `${btn} bg-emerald-600 text-white hover:bg-emerald-700`;
+/** Dark blue gradient used by every filled admin button (also the sign-in screens). */
+export const primaryFill =
+  'bg-gradient-to-br from-brand-600 via-brand-700 to-brand-900 text-white shadow-[0_8px_20px_-10px_rgba(11,41,89,0.8)] hover:from-brand-700 hover:via-brand-800 hover:to-navy-900 disabled:opacity-75 disabled:saturate-[0.7]';
+export const btnPrimary = `${btn} ${primaryFill}`;
 export const btnSecondary = `${btn} border border-navy-900/15 bg-white text-navy-900 hover:border-navy-900/30 hover:bg-navy-50`;
 export const btnDanger = `${btn} border border-red-600/30 bg-white text-red-700 hover:bg-red-50`;
 

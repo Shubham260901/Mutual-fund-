@@ -33,13 +33,13 @@ export function Accordion({ items, defaultOpen = 0, className }: AccordionProps)
                 aria-expanded={isOpen}
                 aria-controls={panelId}
                 onClick={() => setOpen(isOpen ? null : idx)}
-                className="flex w-full items-center justify-between gap-6 py-6 text-left text-base font-semibold text-navy-900 transition-colors hover:text-emerald-700 sm:text-[1.0625rem]"
+                className="flex w-full items-center justify-between gap-6 py-6 text-left text-base font-semibold text-navy-900 transition-colors hover:text-brand-700 sm:text-[1.0625rem]"
               >
                 {item.q}
                 <span
                   className={cn(
                     'flex h-8 w-8 shrink-0 items-center justify-center rounded-full border transition-all duration-300',
-                    isOpen ? 'rotate-45 border-emerald-600 bg-emerald-600 text-white' : 'border-navy-900/15 text-navy-900',
+                    isOpen ? 'rotate-45 border-brand-600 bg-brand-600 text-white' : 'border-navy-900/15 text-navy-900',
                   )}
                   aria-hidden
                 >

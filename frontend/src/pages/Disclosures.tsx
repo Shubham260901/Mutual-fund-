@@ -40,7 +40,7 @@ export default function Disclosures() {
               <ul className="mt-4 space-y-1 border-l border-navy-900/10">
                 {disclosureSections.map((s) => (
                   <li key={s.id}>
-                    <a href={`#${s.id}`} className="-ml-px block border-l-2 border-transparent py-1.5 pl-4 text-sm text-ink-muted transition-colors hover:border-emerald-600 hover:text-navy-900">
+                    <a href={`#${s.id}`} className="-ml-px block border-l-2 border-transparent py-1.5 pl-4 text-sm text-ink-muted transition-colors hover:border-brand-600 hover:text-navy-900">
                       {s.title}
                     </a>
                   </li>
@@ -76,10 +76,10 @@ export default function Disclosures() {
                       href={l.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-between gap-3 rounded-2xl border border-navy-900/[0.07] px-4 py-3 text-sm font-medium text-navy-900 transition-colors hover:border-emerald-600/30 hover:bg-emerald-50/40"
+                      className="flex items-center justify-between gap-3 rounded-2xl border border-navy-900/[0.07] px-4 py-3 text-sm font-medium text-navy-900 transition-colors hover:border-brand-600/30 hover:bg-brand-50/40"
                     >
                       {l.label}
-                      <ArrowUpRight className="h-4 w-4 shrink-0 text-emerald-700" aria-hidden />
+                      <ArrowUpRight className="h-4 w-4 shrink-0 text-brand-700" aria-hidden />
                     </a>
                   </li>
                 ))}

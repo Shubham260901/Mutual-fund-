@@ -25,11 +25,11 @@ Requires **Node.js 22.5+** (the backend uses the built-in `node:sqlite`; tested 
 ```bash
 npm install                    # root: installs the script runner
 npm run install:all            # installs frontend and backend dependencies
-cp backend/.env.example backend/.env   # then set ADMIN_PASSWORD (and SESSION_SECRET)
+cp backend/.env.example backend/.env   # then set ADMIN_EMAIL, ADMIN_PASSWORD (and SESSION_SECRET)
 npm run dev                    # web http://localhost:5173  +  api http://localhost:3001
 ```
 
-Open **http://localhost:5173/admin** and sign in with your `ADMIN_PASSWORD`.
+Open **http://localhost:5173/admin** and sign in with your `ADMIN_EMAIL` and `ADMIN_PASSWORD`.
 
 | Command (from the root) | What it does                                                        |
 | ----------------------- | ------------------------------------------------------------------- |
@@ -41,8 +41,13 @@ Open **http://localhost:5173/admin** and sign in with your `ADMIN_PASSWORD`.
 
 ## Admin panel (`/admin`)
 
-One admin signs in with the `ADMIN_PASSWORD` from `backend/.env`. Sessions are signed, HttpOnly cookies (8 hours), login
+One admin signs in with the `ADMIN_EMAIL` and `ADMIN_PASSWORD` from `backend/.env`. Sessions are signed, HttpOnly cookies (8 hours), login
 attempts are rate-limited, and every change is recorded in the activity log.
+
+**Forgot password.** The link under the password field emails a one-time reset link to `ADMIN_EMAIL` (valid 30 minutes). Email
+is sent through Resend (`RESEND_API_KEY`); without it, in development the link is printed in the API server's console. A new
+password signs out every other device and stays in force until you change `ADMIN_PASSWORD` in `.env`, which is the way back in
+if you ever lose access to the email. Reset links use the Website address from Admin → Settings, else `PUBLIC_URL`.
 
 | Section      | What you can do                                                                                           |
 | ------------ | --------------------------------------------------------------------------------------------------------- |
@@ -95,7 +100,7 @@ in `[square brackets]` is shown with a dashed gold underline so nothing unverifi
 1. **`frontend/src/config/site.ts`**: business name, legal name, ARN, EUIN, ARN validity, NISM certificate, contact details, address, WhatsApp number, grievance officer, distributor bio and photo. (Contact details, bio and photo can then be maintained in Admin → Settings.)
    - The site is branded for **Deepak Gedam**. If you change the name, also update the `<title>`/meta tags in `frontend/index.html`.
 2. **`frontend/src/content/disclosures.ts`**: all regulatory and risk wording. Have it reviewed against current SEBI/AMFI requirements (AMFI Code of Conduct, circulars on MFD communication and websites).
-3. **Admin password**: set a long, unique `ADMIN_PASSWORD` and a random `SESSION_SECRET` in `backend/.env`.
+3. **Admin sign-in**: set `ADMIN_EMAIL` (an inbox you control, for reset links), a long, unique `ADMIN_PASSWORD`, a random `SESSION_SECRET` and `RESEND_API_KEY` in `backend/.env`.
 4. **Forms**: enquiries are saved by the backend (`forms.endpoint` is `/api/enquiry`) and appear in Admin → Enquiries. If you deploy the frontend alone as a static site, point `forms.endpoint` at another JSON form service (Formspree, Web3Forms…); with it empty, forms fall back to the visitor's email app. Set the booking link (Calendly, Cal.com) in Admin → Settings.
 5. **Domain**: replace `https://www.example.com` in `site.ts` (or Admin → Settings → Website address) and in `frontend/public/robots.txt`. The backend generates `sitemap.xml` itself.
 6. **Disclosures page**: update "Last reviewed" in `frontend/src/pages/Disclosures.tsx`.

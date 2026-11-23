@@ -102,7 +102,27 @@ CREATE TABLE IF NOT EXISTS activity (
   detail TEXT NOT NULL DEFAULT ''
 );
 CREATE INDEX IF NOT EXISTS idx_activity_at ON activity(at);
+
+-- Admin password set through "Forgot password". Overrides ADMIN_PASSWORD until .env changes.
+CREATE TABLE IF NOT EXISTS admin_auth (
+  id            INTEGER PRIMARY KEY CHECK (id = 1),
+  password_hash TEXT NOT NULL,
+  env_hash      TEXT NOT NULL,
+  updated_at    TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS password_resets (
+  token_hash TEXT PRIMARY KEY,
+  expires_at INTEGER NOT NULL
+);
 `;
+
+export interface AdminAuth {
+  passwordHash: string;
+  /** Hash of the ADMIN_PASSWORD in .env when this password was set; a different .env password takes over again. */
+  envHash: string;
+  updatedAt: string;
+}
 
 export interface ActivityEntry {
   id: number;
@@ -374,6 +394,39 @@ export function openDb(path: string) {
     /** Removes the customisation so the site falls back to its built-in default. */
     deleteContent(key: string): boolean {
       return Number(db.prepare('DELETE FROM content WHERE key = ?').run(key).changes) > 0;
+    },
+
+    /* ── Admin password & reset tokens ───────────────────────────────── */
+
+    getAdminAuth(): AdminAuth | null {
+      const r = db.prepare('SELECT * FROM admin_auth WHERE id = 1').get() as Row | undefined;
+      return r ? { passwordHash: String(r.password_hash), envHash: String(r.env_hash), updatedAt: String(r.updated_at) } : null;
+    },
+
+    setAdminAuth(passwordHash: string, envHash: string): void {
+      db.prepare(
+        'INSERT INTO admin_auth (id, password_hash, env_hash, updated_at) VALUES (1, ?, ?, ?) ON CONFLICT(id) DO UPDATE SET password_hash = excluded.password_hash, env_hash = excluded.env_hash, updated_at = excluded.updated_at',
+      ).run(passwordHash, envHash, new Date().toISOString());
+    },
+
+    clearAdminAuth(): void {
+      db.prepare('DELETE FROM admin_auth').run();
+    },
+
+    addResetToken(tokenHash: string, expiresAt: number): void {
+      db.prepare('DELETE FROM password_resets WHERE expires_at <= ?').run(Date.now());
+      db.prepare('INSERT INTO password_resets (token_hash, expires_at) VALUES (?, ?)').run(tokenHash, expiresAt);
+    },
+
+    /** Deletes the token and reports whether it existed and had not expired. */
+    consumeResetToken(tokenHash: string, now = Date.now()): boolean {
+      const r = db.prepare('SELECT expires_at FROM password_resets WHERE token_hash = ?').get(tokenHash) as Row | undefined;
+      db.prepare('DELETE FROM password_resets WHERE token_hash = ?').run(tokenHash);
+      return !!r && Number(r.expires_at) > now;
+    },
+
+    clearResetTokens(): void {
+      db.prepare('DELETE FROM password_resets').run();
     },
 
     /* ── Activity log ────────────────────────────────────────────────── */

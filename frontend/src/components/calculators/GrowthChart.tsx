@@ -12,7 +12,7 @@ interface GrowthChartProps {
   height?: number;
 }
 
-const COLORS = { value: '#087F5B', invested: '#5B7BC0', grid: '#E9EDF0', surface: '#FFFFFF' };
+const COLORS = { value: '#1D5BBF', invested: '#C9832F', grid: '#E9EDF0', surface: '#FFFFFF' };
 const PAD = { top: 16, right: 16, bottom: 28, left: 52 };
 
 /** Rounds an axis maximum up to a "nice" number and returns evenly spaced ticks. */
@@ -110,7 +110,7 @@ export function GrowthChart({
       <div className="mb-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-ink-muted">
         <LegendSwatch color={COLORS.value} label={valueLabel} />
         <LegendSwatch color={COLORS.invested} label={investedLabel} />
-        {target && <LegendSwatch color="#B08E52" label={target.label} dashed />}
+        {target && <LegendSwatch color="#4F6081" label={target.label} dashed />}
       </div>
 
       <div
@@ -150,7 +150,7 @@ export function GrowthChart({
               x2={width - PAD.right}
               y1={y(target.value)}
               y2={y(target.value)}
-              stroke="#B08E52"
+              stroke="#4F6081"
               strokeWidth={1.5}
               strokeDasharray="5 4"
             />
@@ -195,7 +195,7 @@ export function GrowthChart({
         <button
           type="button"
           onClick={() => setShowTable((v) => !v)}
-          className="shrink-0 text-xs font-semibold text-emerald-700 hover:text-emerald-800"
+          className="shrink-0 text-xs font-semibold text-brand-700 hover:text-brand-800"
           aria-expanded={showTable}
         >
           {showTable ? 'Hide table' : 'View as table'}

@@ -138,7 +138,7 @@ export function EnquiryForm({ mode, defaultTopic = '' }: { mode: FormMode; defau
           className="flex flex-col items-center py-12 text-center"
           role="status"
         >
-          <span className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50 text-emerald-600">
+          <span className="flex h-16 w-16 items-center justify-center rounded-full bg-brand-50 text-brand-600">
             <CheckCircle2 className="h-8 w-8" />
           </span>
           <h3 className="mt-6 text-2xl font-bold">
@@ -253,9 +253,9 @@ export function EnquiryForm({ mode, defaultTopic = '' }: { mode: FormMode; defau
                       <label
                         key={m}
                         className={cn(
-                          'cursor-pointer rounded-full border px-4 py-2 text-sm font-medium transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-emerald-600',
+                          'cursor-pointer rounded-full border px-4 py-2 text-sm font-medium transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-brand-600',
                           values.meeting === m
-                            ? 'border-emerald-600 bg-emerald-50 text-emerald-800'
+                            ? 'border-brand-600 bg-brand-50 text-brand-800'
                             : 'border-navy-900/15 text-ink-muted hover:border-navy-900/30',
                         )}
                       >
@@ -305,7 +305,7 @@ export function EnquiryForm({ mode, defaultTopic = '' }: { mode: FormMode; defau
             <label className="flex cursor-pointer items-start gap-3 text-sm leading-relaxed text-ink-muted">
               <input
                 type="checkbox"
-                className="mt-1 h-4 w-4 shrink-0 rounded border-navy-900/30 accent-emerald-600"
+                className="mt-1 h-4 w-4 shrink-0 rounded border-navy-900/30 accent-brand-600"
                 checked={values.consent}
                 onChange={(e) => set('consent', e.target.checked)}
                 {...field('consent')}

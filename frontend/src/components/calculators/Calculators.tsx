@@ -6,7 +6,7 @@ import { GrowthChart } from './GrowthChart';
 import { ResultSummary } from './ResultSummary';
 import { SliderInput } from './SliderInput';
 
-const C = { invested: '#5B7BC0', value: '#087F5B' };
+const C = { invested: '#C9832F', value: '#1D5BBF' };
 
 /** Shared input ranges, so limits stay consistent across calculators. */
 const LIMITS = {

@@ -159,7 +159,7 @@ export function SaveBar({ doc, resetLabel = 'Reset to built-in content' }: { doc
         )}
         <span className="text-sm" role="status" aria-live="polite">
           {doc.justSaved ? (
-            <span className="inline-flex items-center gap-1 font-medium text-emerald-700">
+            <span className="inline-flex items-center gap-1 font-medium text-brand-700">
               <Check className="h-4 w-4" aria-hidden /> Saved. Live on the site now.
             </span>
           ) : doc.dirty ? (
@@ -252,7 +252,7 @@ export function SelectField({ label, value, onChange, options, className }: { la
 export function Toggle({ label, checked, onChange, hint }: { label: string; checked: boolean; onChange: (v: boolean) => void; hint?: string }) {
   return (
     <label className="flex cursor-pointer items-start gap-3 text-sm">
-      <input type="checkbox" className="mt-0.5 h-4 w-4 shrink-0 accent-emerald-600" checked={checked} onChange={(e) => onChange(e.target.checked)} />
+      <input type="checkbox" className="mt-0.5 h-4 w-4 shrink-0 accent-brand-600" checked={checked} onChange={(e) => onChange(e.target.checked)} />
       <span>
         <span className="font-medium text-navy-900">{label}</span>
         {hint && <span className="block text-xs text-ink-subtle">{hint}</span>}

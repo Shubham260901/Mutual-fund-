@@ -32,7 +32,7 @@ export default function Services() {
               <li key={s.id} className="shrink-0">
                 <a
                   href={`#${s.id}`}
-                  className="block rounded-full border border-navy-900/10 bg-white px-4 py-2 text-sm font-medium text-ink-muted transition-colors hover:border-emerald-600/30 hover:text-navy-900"
+                  className="block rounded-full border border-navy-900/10 bg-white px-4 py-2 text-sm font-medium text-ink-muted transition-colors hover:border-brand-600/30 hover:text-navy-900"
                 >
                   {s.title}
                 </a>
@@ -48,7 +48,7 @@ export default function Services() {
             <div className="grid gap-10 lg:grid-cols-12 lg:gap-16">
               <Reveal className={cn('lg:col-span-5', i % 2 === 1 && 'lg:order-2')}>
                 <div className="flex items-center gap-4">
-                  <IconBadge icon={s.icon} size="lg" tone={i % 2 === 0 ? 'emerald' : 'navy'} />
+                  <IconBadge icon={s.icon} size="lg" tone={i % 2 === 0 ? 'brand' : 'navy'} />
                   <span className="font-display text-sm font-bold text-gold-700">{String(i + 1).padStart(2, '0')}</span>
                 </div>
                 <h2 id={`${s.id}-title`} className="mt-7 text-display-md font-bold">
@@ -61,7 +61,7 @@ export default function Services() {
                 <ul className="mt-8 grid gap-3 sm:grid-cols-2">
                   {s.points.map((pt) => (
                     <li key={pt} className="flex gap-3 rounded-2xl border border-navy-900/[0.06] bg-white p-4 text-sm leading-relaxed text-navy-800">
-                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" aria-hidden />
+                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-brand-600" aria-hidden />
                       {pt}
                     </li>
                   ))}

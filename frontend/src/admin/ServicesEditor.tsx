@@ -11,7 +11,7 @@ function IconPicker({ value, onChange }: { value: string; onChange: (v: string) 
   const Icon = ICONS[value] ?? ICONS.Briefcase;
   return (
     <div className="flex items-end gap-3">
-      <span className="mb-0.5 flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700" aria-hidden>
+      <span className="mb-0.5 flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand-50 text-brand-700" aria-hidden>
         <Icon className="h-6 w-6" />
       </span>
       <SelectField className="flex-1" label="Icon" value={value} onChange={onChange} options={iconOptions} />
@@ -165,7 +165,7 @@ export function ServicesEditor() {
             role="tab"
             aria-selected={part === t.id}
             onClick={() => confirmDiscard() && setPart(t.id)}
-            className={cn('rounded-full border px-4 py-2 text-sm font-semibold transition-colors', part === t.id ? 'border-emerald-600 bg-emerald-50 text-emerald-800' : 'border-navy-900/15 text-ink-muted hover:border-navy-900/30')}
+            className={cn('rounded-full border px-4 py-2 text-sm font-semibold transition-colors', part === t.id ? 'border-brand-600 bg-brand-50 text-brand-800' : 'border-navy-900/15 text-ink-muted hover:border-navy-900/30')}
           >
             {t.label}
           </button>

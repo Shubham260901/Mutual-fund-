@@ -3,19 +3,19 @@ import { cn } from '@/lib/cn';
 
 interface IconBadgeProps {
   icon: LucideIcon;
-  tone?: 'emerald' | 'navy' | 'gold' | 'glass';
+  tone?: 'brand' | 'navy' | 'gold' | 'glass';
   size?: 'md' | 'lg';
   className?: string;
 }
 
 const tones = {
-  emerald: 'bg-emerald-50 text-emerald-700 ring-emerald-600/10',
+  brand: 'bg-brand-50 text-brand-700 ring-brand-600/10',
   navy: 'bg-navy-900 text-gold-300 ring-navy-900/10',
   gold: 'bg-gold-100 text-gold-700 ring-gold-400/20',
   glass: 'bg-white/[0.06] text-gold-300 ring-white/10',
 };
 
-export function IconBadge({ icon: Icon, tone = 'emerald', size = 'md', className }: IconBadgeProps) {
+export function IconBadge({ icon: Icon, tone = 'brand', size = 'md', className }: IconBadgeProps) {
   return (
     <span
       className={cn(

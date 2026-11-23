@@ -72,7 +72,7 @@ export function DistributorIntro() {
         <div className="pt-6 lg:col-span-7 lg:pt-0">
           <SectionHeading
             eyebrow="Meet your distributor"
-            title={<>Personal guidance, grounded in <span className="text-emerald-700">clarity and discipline</span>.</>}
+            title={<>Personal guidance, grounded in <span className="text-brand-700">clarity and discipline</span>.</>}
           />
           <Reveal delay={0.1}>
             <p className="lead mt-6">
@@ -120,12 +120,12 @@ export function ServicesGrid() {
             <Reveal key={s.id} delay={(i % 4) * 0.06}>
               <Link
                 to={`/services#${s.id}`}
-                className="group flex h-full flex-col rounded-3xl border border-navy-900/[0.07] bg-ivory/60 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-emerald-600/20 hover:bg-white hover:shadow-lift"
+                className="group flex h-full flex-col rounded-3xl border border-navy-900/[0.07] bg-ivory/60 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-brand-600/20 hover:bg-white hover:shadow-lift"
               >
                 <IconBadge icon={s.icon} />
                 <h3 className="mt-6 font-display text-lg font-bold">{s.title}</h3>
                 <p className="mt-2 flex-1 text-sm leading-relaxed text-ink-muted">{s.summary}</p>
-                <span className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-700">
+                <span className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700">
                   Learn more
                   <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                 </span>
@@ -256,10 +256,10 @@ export function ArticleCard({ article }: { article: (typeof articles)[number] })
       className="group flex h-full flex-col rounded-3xl border border-navy-900/[0.07] bg-ivory/50 p-7 transition-all duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-lift"
     >
       <div className="flex items-center gap-3 text-xs">
-        <span className="rounded-full bg-emerald-50 px-2.5 py-1 font-semibold text-emerald-800">{article.category}</span>
+        <span className="rounded-full bg-brand-50 px-2.5 py-1 font-semibold text-brand-800">{article.category}</span>
         <span className="text-ink-subtle">{article.readMinutes} min read</span>
       </div>
-      <h3 className="mt-5 text-xl font-bold leading-snug transition-colors group-hover:text-emerald-800">{article.title}</h3>
+      <h3 className="mt-5 text-xl font-bold leading-snug transition-colors group-hover:text-brand-800">{article.title}</h3>
       <p className="mt-3 flex-1 text-sm leading-relaxed text-ink-muted">{article.excerpt}</p>
       <span className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-navy-900">
         Read article <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />

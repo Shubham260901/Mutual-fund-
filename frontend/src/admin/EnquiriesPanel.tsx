@@ -8,9 +8,9 @@ const whatsappHref = (phone: string) => `https://wa.me/91${phone}`;
 
 function Chip({ label, onClear }: { label: string; onClear: () => void }) {
   return (
-    <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 py-1 pl-3 pr-1.5 font-medium text-emerald-800 ring-1 ring-inset ring-emerald-600/20">
+    <span className="inline-flex items-center gap-1 rounded-full bg-brand-50 py-1 pl-3 pr-1.5 font-medium text-brand-800 ring-1 ring-inset ring-brand-600/20">
       {label}
-      <button type="button" onClick={onClear} aria-label={`Remove filter: ${label}`} className="rounded-full p-0.5 hover:bg-emerald-100">
+      <button type="button" onClick={onClear} aria-label={`Remove filter: ${label}`} className="rounded-full p-0.5 hover:bg-brand-100">
         <X className="h-3.5 w-3.5" />
       </button>
     </span>
@@ -203,7 +203,7 @@ export function EnquiriesPanel({ initial }: { initial?: Partial<EnquiryFilters> 
                   onClick={() => setFilter({ status: s })}
                   className={cn(
                     'rounded-full border px-3.5 py-1.5 text-sm font-medium capitalize transition-colors',
-                    active ? 'border-emerald-600 bg-emerald-50 text-emerald-800' : 'border-navy-900/15 text-ink-muted hover:border-navy-900/30',
+                    active ? 'border-brand-600 bg-brand-50 text-brand-800' : 'border-navy-900/15 text-ink-muted hover:border-navy-900/30',
                   )}
                 >
                   {s || 'All'} {count !== undefined && <span className="tabular ml-1 text-xs opacity-70">{count}</span>}
@@ -251,7 +251,7 @@ export function EnquiriesPanel({ initial }: { initial?: Partial<EnquiryFilters> 
             {filters.status && <Chip label={`Status: ${filters.status}`} onClear={() => setFilter({ status: '' })} />}
             {filters.type && <Chip label={filters.type === 'consultation' ? 'Consultations' : 'Enquiries'} onClear={() => setFilter({ type: '' })} />}
             {filters.q && <Chip label={`“${filters.q}”`} onClear={() => { setSearch(''); setFilter({ q: '' }); }} />}
-            <button type="button" className="font-medium text-emerald-700 hover:underline" onClick={() => { setSearch(''); setFilters(NO_FILTERS); }}>
+            <button type="button" className="font-medium text-brand-700 hover:underline" onClick={() => { setSearch(''); setFilters(NO_FILTERS); }}>
               Clear all
             </button>
           </div>

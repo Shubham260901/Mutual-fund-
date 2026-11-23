@@ -1,17 +1,35 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import express, { type NextFunction, type Request, type Response } from 'express';
-import { checkPassword, clearCookie, COOKIE_NAME, createLimiter, createSession, readCookie, sessionCookie, verifySession } from './auth.ts';
+import {
+  checkEmail,
+  checkPassword,
+  clearCookie,
+  COOKIE_NAME,
+  createLimiter,
+  createResetToken,
+  createSession,
+  hashPassword,
+  hashResetToken,
+  MIN_PASSWORD_LENGTH,
+  readCookie,
+  RESET_TOKEN_TTL_MS,
+  sessionCookie,
+  verifyPasswordHash,
+  verifySession,
+} from './auth.ts';
 import type { Db, Enquiry, ListFilters } from './db.ts';
 import { IMAGE_MIME_TYPES, MAX_IMAGE_BYTES, type ImageStore } from './images.ts';
 import { CONTENT_KEYS, isContentKey, parseContent, publicContent, SEO_PATHS } from './content.ts';
-import { notifyNewEnquiry } from './notify.ts';
+import { notifyNewEnquiry, sendPasswordResetEmail } from './notify.ts';
 import { clean, isPeriod, isStatus, parseEnquiry, periodRange, todayIST } from './validation.ts';
 
 export interface AppConfig {
   db: Db;
   images: ImageStore;
-  /** Admin password. When empty, admin login is disabled. */
+  /** Admin sign-in email; also where reset links are sent. When empty, admin login is disabled. */
+  adminEmail: string;
+  /** Admin password from .env. When empty, admin login is disabled. A password set via "Forgot password" overrides it. */
   adminPassword: string;
   sessionSecret: string;
   /** Folder with the built site (vite build output). Served when present. */
@@ -21,6 +39,8 @@ export interface AppConfig {
   /** Number of reverse proxies in front of the app (so req.ip and req.secure are right). */
   trustProxy?: number;
   notify?: (e: Enquiry) => Promise<void> | void;
+  /** Delivers a password reset link to the admin email (default: Resend, or the console in development). */
+  sendResetLink?: (to: string, link: string) => Promise<void> | void;
 }
 
 const ADMIN_HEADER = 'x-admin-request';
@@ -58,6 +78,29 @@ export function createApp(cfg: AppConfig) {
 
   const enquiryLimiter = createLimiter(5, 10 * 60 * 1000);
   const loginLimiter = createLimiter(5, 15 * 60 * 1000);
+  const forgotLimiter = createLimiter(3, 15 * 60 * 1000);
+  /** Caps reset emails overall, so nobody can flood the admin's inbox from many IPs. */
+  const resetEmailLimiter = createLimiter(5, 60 * 60 * 1000);
+  const resetLimiter = createLimiter(10, 15 * 60 * 1000);
+
+  // A password saved through "Forgot password" stays in force until ADMIN_PASSWORD in .env is changed;
+  // editing .env is the owner's fallback if the email inbox is ever lost.
+  {
+    const stored = db.getAdminAuth();
+    if (stored && !verifyPasswordHash(cfg.adminPassword, stored.envHash)) db.clearAdminAuth();
+  }
+  const loginEnabled = () => !!cfg.adminEmail && !!cfg.adminPassword;
+  const passwordMatches = (given: unknown) => {
+    const stored = db.getAdminAuth();
+    return stored ? verifyPasswordHash(given, stored.passwordHash) : checkPassword(given, cfg.adminPassword);
+  };
+  /** Sessions are signed with a key that changes whenever the password does, so a reset signs out every device. */
+  const sessionKey = () => `${cfg.sessionSecret}:${db.getAdminAuth()?.updatedAt ?? 'env'}`;
+  /** Never built from request headers: a forged Host/Origin would put the reset token in a link to someone else's site. */
+  const siteBaseUrl = () => {
+    const settings = db.getContent('settings')?.value as { url?: string } | undefined;
+    return (settings?.url || cfg.publicUrl || 'http://localhost:5173').replace(/\/+$/, '');
+  };
 
   app.use((_req, res, next) => {
     res.setHeader('X-Content-Type-Options', 'nosniff');
@@ -124,20 +167,57 @@ export function createApp(cfg: AppConfig) {
 
   /* ── Admin auth ─────────────────────────────────────────────────────── */
 
-  const isAuthed = (req: Request) => verifySession(readCookie(req.headers.cookie, COOKIE_NAME), cfg.sessionSecret);
+  const isAuthed = (req: Request) => verifySession(readCookie(req.headers.cookie, COOKIE_NAME), sessionKey());
+  const notConfigured = (res: Response) =>
+    void res.status(503).json({ ok: false, error: 'Admin login is not configured. Set ADMIN_EMAIL and ADMIN_PASSWORD in backend/.env.' });
 
   app.post('/api/admin/login', json, (req, res) => {
-    if (!cfg.adminPassword) return void res.status(503).json({ ok: false, error: 'Admin login is not configured. Set ADMIN_PASSWORD.' });
+    if (!loginEnabled()) return notConfigured(res);
     const ip = req.ip ?? 'unknown';
     if (loginLimiter.blocked(ip)) return void res.status(429).json({ ok: false, error: 'Too many attempts. Try again in 15 minutes.' });
-    if (!checkPassword(req.body?.password, cfg.adminPassword)) {
+    // Check both every time, so a wrong email takes as long as a wrong password.
+    const emailOk = checkEmail(req.body?.email, cfg.adminEmail);
+    const passwordOk = passwordMatches(req.body?.password);
+    if (!emailOk || !passwordOk) {
       loginLimiter.hit(ip);
       db.log('Failed sign-in attempt');
-      return void res.status(401).json({ ok: false, error: 'Incorrect password.' });
+      return void res.status(401).json({ ok: false, error: 'Incorrect email or password.' });
     }
     loginLimiter.reset(ip);
     db.log('Signed in');
-    res.setHeader('Set-Cookie', sessionCookie(createSession(cfg.sessionSecret), req.secure));
+    res.setHeader('Set-Cookie', sessionCookie(createSession(sessionKey()), req.secure));
+    res.json({ ok: true });
+  });
+
+  /** Always answers the same way, so it can't be used to discover the admin email. */
+  app.post('/api/admin/forgot-password', json, (req, res) => {
+    if (!loginEnabled()) return notConfigured(res);
+    if (!forgotLimiter.hit(req.ip ?? 'unknown')) {
+      return void res.status(429).json({ ok: false, error: 'Too many requests. Try again in 15 minutes.' });
+    }
+    if (checkEmail(req.body?.email, cfg.adminEmail) && resetEmailLimiter.hit('admin')) {
+      const { token, tokenHash } = createResetToken();
+      db.addResetToken(tokenHash, Date.now() + RESET_TOKEN_TTL_MS);
+      db.log('Password reset requested');
+      const link = `${siteBaseUrl()}/admin?reset=${encodeURIComponent(token)}`;
+      void Promise.resolve((cfg.sendResetLink ?? sendPasswordResetEmail)(cfg.adminEmail, link)).catch(() => {});
+    }
+    res.json({ ok: true });
+  });
+
+  app.post('/api/admin/reset-password', json, (req, res) => {
+    if (!loginEnabled()) return notConfigured(res);
+    if (!resetLimiter.hit(req.ip ?? 'unknown')) return void res.status(429).json({ ok: false, error: 'Too many attempts. Try again in 15 minutes.' });
+    const { token, password } = (req.body ?? {}) as { token?: unknown; password?: unknown };
+    if (typeof password !== 'string' || password.length < MIN_PASSWORD_LENGTH || password.length > 200) {
+      return void res.status(400).json({ ok: false, error: `Use a password of at least ${MIN_PASSWORD_LENGTH} characters.` });
+    }
+    if (typeof token !== 'string' || token.length > 100 || !db.consumeResetToken(hashResetToken(token))) {
+      return void res.status(400).json({ ok: false, error: 'This reset link is invalid or has expired. Request a new one.' });
+    }
+    db.setAdminAuth(hashPassword(password), hashPassword(cfg.adminPassword));
+    db.clearResetTokens();
+    db.log('Password changed with a reset link');
     res.json({ ok: true });
   });
 

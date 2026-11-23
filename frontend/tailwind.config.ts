@@ -25,17 +25,18 @@ export default {
           900: '#101D35',
           950: '#0A1324',
         },
-        emerald: {
-          50: '#E9F6F0',
-          100: '#CDEBDF',
-          200: '#9BD6BF',
-          300: '#5FBC98',
-          400: '#2A9E76',
-          500: '#0E8D66',
-          600: '#087F5B',
-          700: '#06694B',
-          800: '#05523B',
-          900: '#043D2C',
+        /** Brand blue (matches the logo badge). Was emerald green. */
+        brand: {
+          50: '#EBF1FB',
+          100: '#D4E1F6',
+          200: '#A9C3EC',
+          300: '#77A0DF',
+          400: '#4A80D4',
+          500: '#1D5BBF',
+          600: '#1650A8',
+          700: '#124290',
+          800: '#0F3675',
+          900: '#0B2959',
         },
         gold: {
           100: '#F4ECDD',
@@ -53,8 +54,9 @@ export default {
           subtle: '#646E84',
         },
         chart: {
-          value: '#087F5B',
-          invested: '#5B7BC0',
+          value: '#1D5BBF',
+          invested: '#C9832F',
+          target: '#4F6081',
         },
       },
       fontFamily: {
@@ -74,7 +76,7 @@ export default {
       },
       backgroundImage: {
         'navy-radial':
-          'radial-gradient(120% 80% at 85% 0%, rgba(8,127,91,0.28) 0%, rgba(16,29,53,0) 55%), radial-gradient(90% 70% at 0% 100%, rgba(199,166,106,0.14) 0%, rgba(16,29,53,0) 60%)',
+          'radial-gradient(120% 80% at 85% 0%, rgba(22,80,168,0.32) 0%, rgba(16,29,53,0) 55%), radial-gradient(90% 70% at 0% 100%, rgba(199,166,106,0.14) 0%, rgba(16,29,53,0) 60%)',
       },
     },
   },

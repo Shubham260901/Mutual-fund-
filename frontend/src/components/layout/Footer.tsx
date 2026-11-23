@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { fullAddress, site } from '@/config/site';
 import { STANDARD_RISK_WARNING, shortFooterDisclaimer, officialLinks } from '@/content/disclosures';
 import { Value } from '../ui/Placeholder';
-import { Logo } from './Logo';
+import { Logo, LogoMark } from './Logo';
 
 const columns = [
   {
@@ -46,10 +46,10 @@ export function Footer() {
         </div>
       </div>
 
-      <div className="container-page grid gap-14 py-16 lg:grid-cols-12 lg:gap-10 lg:py-20">
-        <div className="lg:col-span-4">
-          <Logo tone="light" />
-          <p className="mt-6 max-w-sm text-sm leading-relaxed text-navy-100/70">
+      <div className="container-page grid gap-14 py-16 lg:py-20 xl:grid-cols-12 xl:gap-10">
+        <div className="xl:col-span-4">
+          <Logo tone="light" size="lg" />
+          <p className="mt-8 max-w-sm text-sm leading-relaxed text-navy-100/70">
             Disciplined, goal-based mutual fund investing for individuals and families, with transparent disclosures at every step.
           </p>
           <dl className="mt-8 grid max-w-sm grid-cols-2 gap-px overflow-hidden rounded-2xl bg-white/[0.07] text-sm">
@@ -69,7 +69,7 @@ export function Footer() {
           </dl>
         </div>
 
-        <div className="grid grid-cols-2 gap-10 sm:grid-cols-3 lg:col-span-5">
+        <div className="grid grid-cols-2 gap-10 sm:grid-cols-3 xl:col-span-5">
           {columns.map((col) => (
             <div key={col.title}>
               <h2 className="font-sans text-xs font-semibold uppercase tracking-[0.14em] text-gold-300">{col.title}</h2>
@@ -86,29 +86,29 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="lg:col-span-3">
+        <div className="xl:col-span-3">
           <h2 className="font-sans text-xs font-semibold uppercase tracking-[0.14em] text-gold-300">Get in touch</h2>
           <ul className="mt-5 space-y-4 text-sm">
             <li className="flex gap-3">
-              <Phone className="mt-0.5 h-4 w-4 shrink-0 text-emerald-400" aria-hidden />
+              <Phone className="mt-0.5 h-4 w-4 shrink-0 text-brand-400" aria-hidden />
               <a href={`tel:+${site.contact.phoneE164}`} className="hover:text-white">
                 <Value>{site.contact.phone}</Value>
               </a>
             </li>
             <li className="flex gap-3">
-              <Mail className="mt-0.5 h-4 w-4 shrink-0 text-emerald-400" aria-hidden />
+              <Mail className="mt-0.5 h-4 w-4 shrink-0 text-brand-400" aria-hidden />
               <a href={`mailto:${site.contact.email}`} className="break-all hover:text-white">
                 {site.contact.email}
               </a>
             </li>
             <li className="flex gap-3">
-              <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-emerald-400" aria-hidden />
+              <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-brand-400" aria-hidden />
               <address className="not-italic leading-relaxed">
                 <Value>{fullAddress()}</Value>
               </address>
             </li>
             <li className="flex gap-3">
-              <Clock className="mt-0.5 h-4 w-4 shrink-0 text-emerald-400" aria-hidden />
+              <Clock className="mt-0.5 h-4 w-4 shrink-0 text-brand-400" aria-hidden />
               <span>{site.contact.hours}</span>
             </li>
           </ul>
@@ -137,9 +137,12 @@ export function Footer() {
               </li>
             ))}
           </ul>
-          <div className="flex flex-col justify-between gap-2 border-t border-white/[0.07] pt-6 sm:flex-row">
-            <p>
-              © {year} <Value>{site.legalName}</Value>. All rights reserved.
+          <div className="flex flex-col justify-between gap-3 border-t border-white/[0.07] pt-6 sm:flex-row sm:items-center">
+            <p className="flex items-center gap-3">
+              <LogoMark className="h-8 w-8" />
+              <span>
+                © {year} <Value>{site.legalName}</Value>. All rights reserved.
+              </span>
             </p>
             <p>
               {site.credentials.category} · <Value>{site.credentials.arn}</Value>

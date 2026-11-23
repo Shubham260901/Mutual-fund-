@@ -4,7 +4,6 @@ import { useSearchParams } from 'react-router-dom';
 import { EnquiryForm, type FormMode } from '@/components/forms/EnquiryForm';
 import { Button } from '@/components/ui/Button';
 import { IconBadge } from '@/components/ui/IconBadge';
-import { PageHero } from '@/components/ui/PageHero';
 import { Value } from '@/components/ui/Placeholder';
 import { Reveal } from '@/components/ui/Reveal';
 import { fullAddress, site, whatsappLink } from '@/config/site';
@@ -58,13 +57,10 @@ export default function Contact() {
 
   return (
     <>
-      <PageHero
-        eyebrow="Contact us"
-        title="Let’s talk about your goals."
-        description="Send us a message, book a no-obligation consultation, or reach us directly. We usually respond within one working day."
-      />
+      {/* No page hero here: the form starts right under the navbar. The heading stays for screen readers and SEO. */}
+      <h1 className="sr-only">Contact {site.name}</h1>
 
-      <section className="section pt-12 sm:pt-16">
+      <section className="section pt-28 sm:pt-32 lg:pt-36">
         <div className="container-page grid gap-10 lg:grid-cols-12">
           <Reveal className="lg:col-span-7" id="form">
             <div className="card p-6 sm:p-10">
@@ -136,7 +132,7 @@ export default function Contact() {
                       <Value>{c.value}</Value>
                     </p>
                   </div>
-                  <span className="hidden text-sm font-semibold text-emerald-700 transition-transform group-hover:translate-x-0.5 sm:block">
+                  <span className="hidden text-sm font-semibold text-brand-700 transition-transform group-hover:translate-x-0.5 sm:block">
                     {c.cta} →
                   </span>
                 </a>
@@ -190,7 +186,7 @@ export default function Contact() {
                     'No obligation to invest',
                   ].map((t, i) => (
                     <li key={t} className="flex gap-3">
-                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-[0.6875rem] font-bold text-emerald-800">
+                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-50 text-[0.6875rem] font-bold text-brand-800">
                         {i + 1}
                       </span>
                       {t}

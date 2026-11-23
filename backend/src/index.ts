@@ -7,9 +7,10 @@ import { createImageStore } from './images.ts';
 const env = process.env;
 const dataDir = resolve(env.DATA_DIR || 'data');
 
+const adminEmail = (env.ADMIN_EMAIL || '').trim();
 const adminPassword = env.ADMIN_PASSWORD || '';
-if (!adminPassword) {
-  console.warn('[server] ADMIN_PASSWORD is not set: the admin panel login is disabled. Add it to .env (see .env.example).');
+if (!adminEmail || !adminPassword) {
+  console.warn('[server] ADMIN_EMAIL or ADMIN_PASSWORD is not set: the admin panel login is disabled. Add both to .env (see .env.example).');
 } else if (adminPassword.length < 8) {
   console.warn('[server] ADMIN_PASSWORD is shorter than 8 characters. Use a long, unique password.');
 }
@@ -23,8 +24,10 @@ if (!sessionSecret) {
 const app = createApp({
   db: openDb(env.DATABASE_PATH ? resolve(env.DATABASE_PATH) : resolve(dataDir, 'site.db')),
   images: createImageStore(resolve(dataDir, 'uploads')),
+  adminEmail,
   adminPassword,
   sessionSecret,
+  publicUrl: env.PUBLIC_URL || undefined,
   distDir: resolve(env.FRONTEND_DIST || '../frontend/dist'),
   trustProxy: Number(env.TRUST_PROXY) || 0,
 });
